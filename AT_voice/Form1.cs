@@ -3,19 +3,58 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace AT_voice
 {
-   
+    /*  public class Settings
+      {
+          private string _serialPort;
+
+
+          public string sserialPort
+          {
+              get { return _serialPort; }
+              set { _serialPort = value; }
+          }
+      }*/
+
     public partial class Form1 : Form
     {
+        #region Settings action
+        XMLconf xmlconf = new XMLconf();
+        //Props props = new Props(); //экземпляр класса с настройками 
+        //Запись настроек
+        private void writeSetting()
+        {
+            //Запись значения в ComboBox1
+            //props.Fields.TextValue = ComboBox1.Text;
+            //Запись значения в checkBox1
+            //  props.Fields.BoolValue = checkBox1.Checked;
+          //  xmlconf.Fields.ComboBoxValue = comboBox1;
+            xmlconf.WriteXml();
+          
+        }
+        //Чтение настроек
+        private void readSetting()
+        {
+            xmlconf.ReadXml();
+           // ComboBox1.Text = props.Fields.TextValue;
+           // checkBox1.Checked = props.Fields.BoolValue;
+        }
+        #endregion
+
         SerialPort _serialPort;
         int flag1=0;
+
+        //    Settings settings = null;
+        #region Form Action
         public Form1()
         {
             InitializeComponent();
@@ -32,6 +71,34 @@ namespace AT_voice
             textBox1.ScrollToCaret();
             timer1.Interval=10000;
             timer1.Enabled = false;
+            readSetting();
+
+
+
+
+            /*   if (File.Exists("settings.xml"))
+                {
+                    XmlSerializer nser = new XmlSerializer(typeof(Settings));
+                    XmlSerializer deser = new XmlSerializer(typeof(Settings));
+                    TextReader reader = new StreamReader("settings.xml");
+                    settings = (Settings)nser.Deserialize(reader);
+                    reader.Close();
+
+                }
+                else
+                {
+                    settings = new Settings();
+
+                   // Console.WriteLine("_serialPort");
+                   // string ismtpHost = Console.ReadLine();
+                   // settings.serialPort = _serialPort;
+                  //  settings.sserialPort= _serialPort;
+
+                    XmlSerializer ser = new XmlSerializer(typeof(Settings));
+                    TextWriter writer = new StreamWriter("settings.xml");
+                    ser.Serialize(writer, settings);
+                    writer.Close();
+                }*/
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -121,5 +188,13 @@ namespace AT_voice
         {
             MessageBox.Show(at_command("ATI"));
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            writeSetting();
+        }
     }
+    #endregion
+
+
 }
